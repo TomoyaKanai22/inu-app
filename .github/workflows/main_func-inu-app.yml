@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'workspace/app/be' # 👈 正しいバックエンドのパスに変更しました
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '/workspace/app/be' # 👈 頭にスラッシュをつけます
   NODE_VERSION: '22.x'
 
 jobs:
