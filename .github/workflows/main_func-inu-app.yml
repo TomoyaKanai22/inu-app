@@ -67,7 +67,15 @@ jobs:
           unzip release.zip
           rm release.zip
       
-      # 👈 デプロイ時は展開された直下のファイルをそのまま送るため '.' に指定
+      # 1️⃣ まず最初にAzureへログイン（上に移動しました）
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_893F53D88CF548CF8DDD40923A10A871 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0EC669F1541E4DC1AE68B6CF7DC0AD1D }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6915DA6B8CB54E89B4EB9114F086C276 }}
+
+      # 2️⃣ ログイン完了後にデプロイを実行（下に移動しました）
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
@@ -75,10 +83,3 @@ jobs:
           app-name: 'func-inu-app'
           slot-name: 'Production'
           package: '.'
-          
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_893F53D88CF548CF8DDD40923A10A871 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0EC669F1541E4DC1AE68B6CF7DC0AD1D }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_6915DA6B8CB54E89B4EB9114F086C276 }}
