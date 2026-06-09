@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: inu-app
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    volumes:
+      - .:/workspace:cached
+    network_mode: service:db # dbコンテナのネットワークに相乗りする
+    tty: true
+
+  db:
+    image: mongo:latest
+    container_name: inu-db
+    ports:
+      - "27017:27017" # MongoDB用
+      - "5173:5173"   # Vue.js (Vite) 用（appからここへ引っ越し）
+      - "7071:7071"   # Azure Functions用（appからここへ引っ越し）
+    volumes:
+      - inu-db-data:/data/db
+
+volumes:
+  inu-db-data:
