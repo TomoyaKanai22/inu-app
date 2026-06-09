@@ -21,14 +21,17 @@ const Dog = (mongoose.models.Dog as mongoose.Model<IDog>) || mongoose.model<IDog
 
 // データベース接続関数
 async function connectDB() {
-    // 2. 一度変数に受けてから安全に接続ステータスをチェック
     const conn = mongoose.connection;
     
     if (!conn || conn.readyState === 0) {
-        // network_mode: service:db のため localhost で通信可能
-        await mongoose.connect("mongodb://localhost:27017/inudb");
+        // 環境変数 MONGODB_URI を使用する
+        const uri = process.env.MONGODB_URI; 
+        if (!uri) {
+            throw new Error("MONGODB_URI 環境変数が設定されていません");
+        }
+        await mongoose.connect(uri);
         
-        // 初回起動時、データが空っぽなら初期データを自動投入
+        // （以下、データ初期投入の処理はそのまま）
         const count = await Dog.countDocuments();
         if (count === 0) {
             await Dog.insertMany([
