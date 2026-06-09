@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '/workspace/app/be' # 👈 頭にスラッシュをつけます
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: 'app/be' # 👈 workspace/ を完全に削り、ここから始めます
   NODE_VERSION: '22.x'
 
 jobs:
@@ -37,11 +37,11 @@ jobs:
           npm run test --if-present
           popd
 
-      # 👈 beフォルダの中身だけを綺麗にZipに固めるように修正しました
+      # 35行目付近：Zip圧縮ステップの cd の先を修正
       - name: Zip artifact for deployment
         run: |
           cd ./${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          zip -r ../../../release.zip ./*
+          zip -r ../../release.zip ./* 
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
