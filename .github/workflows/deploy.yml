@@ -19,9 +19,21 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
-      # S3へアップロード（--deleteで削除差分も反映）
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      # ビルドを実行して dist フォルダを作成する
+      - name: Build
+        run: |
+          cd app/fe
+          npm install
+          npm run build
+
+      # S3へアップロード（ビルドされた dist フォルダの中身だけを同期）
       - name: Deploy to S3
-        run: aws s3 sync . s3://inu-app-frontend-20260612 --delete --exclude ".git/*" --exclude ".github/*"
+        run: aws s3 sync app/fe/dist/ s3://inu-app-frontend-20260612 --delete
 
       # CloudFrontのキャッシュを削除（サイトを即時更新するため）
       - name: Invalidate CloudFront
