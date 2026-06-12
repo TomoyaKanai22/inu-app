@@ -3,7 +3,7 @@ name: Deploy to S3
 on:
   push:
     branches:
-      - main  # メインブランチにプッシュした時に実行
+      - main
 
 jobs:
   deploy:
@@ -22,19 +22,17 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          # バージョンを 20 に更新
+          node-version: '20'
 
-      # ビルドを実行して dist フォルダを作成する
       - name: Build
         run: |
           cd app/fe
           npm install
           npm run build
 
-      # S3へアップロード（ビルドされた dist フォルダの中身だけを同期）
       - name: Deploy to S3
         run: aws s3 sync app/fe/dist/ s3://inu-app-frontend-20260612 --delete
 
-      # CloudFrontのキャッシュを削除（サイトを即時更新するため）
       - name: Invalidate CloudFront
         run: aws cloudfront create-invalidation --distribution-id EI9KCQPEHOWCG --paths "/*"
