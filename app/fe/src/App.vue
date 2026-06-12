@@ -59,7 +59,7 @@ const searchDog = async () => {
   <div class="container">
     <div class="title-area">
       <span class="emoji">🐕</span>
-      <h1>犬種判定システム(ver 1.0)</h1>
+      <h1>犬種判定システム(ver 2.0)</h1>
       <span class="app-code">inu-app</span>
     </div>
     <p class="subtitle">データベースから犬の情報を検索します</p>
